@@ -1,5 +1,7 @@
 import socket
 import utilities_server
+from pathlib import Path
+
 
 # # TO DO: set constants
 # IP = '127.0.0.1'
@@ -13,13 +15,27 @@ data = utilities_server.get_server_configuration()
 def get_file_data(filename):
     """ Get data from file """
     if filename == '/':
-        filename = 'index.txt'
+        filename = 'index.html'
     else:
-        filename = filename.split('/')[1:]
+        filename = filename[1:]
         filename = ''.join(filename)
         if filename == 'favicon.ico':
             return "error fav"
+
     return utilities_server.get_file_content(filename)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -81,18 +97,23 @@ def handle_client(client_socket):
     """ Handles client requests: verifies client's requests are legal HTTP, calls function to handle the requests """
     print('Client connected')
     MESSAGE_SIZE = data["SERVER_DETAILS"]["MESSAGE_SIZE"]
-    client_request = client_socket.recv(1024).decode()
-    valid_http, resource = validate_http_request(client_request)
+    while True:
+        try:
+            client_request = client_socket.recv(4096).decode()
+            if len(client_request) == 0:
+                break
+        except:
+            return
+        valid_http, resource = validate_http_request(client_request)
 
-    if valid_http:
-        print('valid HTTP request')
-        handle_client_request(resource, client_socket)
-    else:
-        print("error - not a valid HTTP request")
-        client_socket.send(b'error')
-
-    print("close connection")
-    client_socket.close()
+        if valid_http:
+            print('valid HTTP request')
+            handle_client_request(resource, client_socket)
+        else:
+            print("error - not a valid HTTP request")
+            client_socket.send(b'error')
+        print("close connection")
+        client_socket.close()
 
 def main():
     # Open a socket and loop forever while waiting for clients
