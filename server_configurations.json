@@ -1,0 +1,15 @@
+{
+  "SERVER_DETAILS": {
+    "IP": "127.0.0.1",
+    "PORT": 80,
+    "SOCKET_TIMEOUT": 0.1,
+    "ENCODE": "ascii",
+    "MESSAGE_SIZE": 64
+  },
+  "HTTP": {
+    "HTTP_VERSION": "HTTP/1.1",
+    "HTTP_VALID": "200 OK",
+    "HTTP_END": "\r\n",
+    "GET_REQUEST": "GET"
+  }
+}
